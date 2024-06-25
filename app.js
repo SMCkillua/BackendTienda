@@ -44,7 +44,19 @@ app.use("/api/payment", paymentRouter);
 app.use("/api/users", authenticateJWT, usersRouter);
 app.use("/api/orders", authenticateJWT, OrdersRouter);
 app.use("/api/carts", authenticateJWT, CartsRoutes);
-
+app.get("/", (req, res) => {
+  const htmlResponse = `
+  <html>
+    <head>
+      <title>Nuestra api</title>
+    </head>
+    <body>
+      <h1>Bienvenidos developmens de la API<h1>
+      <h2>Esta es la documentacion si la necesitan: <h2>
+    </body>
+  </html>`;
+  res.send(htmlResponse);
+});
 app.use((req, res) => {
   res.status(404).json({
     message: "No se encontró el endpoint",
