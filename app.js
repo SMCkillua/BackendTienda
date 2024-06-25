@@ -45,7 +45,7 @@ app.use("/api/users", authenticateJWT, usersRouter);
 app.use("/api/orders", authenticateJWT, OrdersRouter);
 app.use("/api/carts", authenticateJWT, CartsRoutes);
 app.use("/", (req,res) =>{
-  res.send("Welcome to PlexoShop API")
+  res.json({Bienvenido: "Welcome to PlexoShop API"})
 } )
 app.use((req, res) => {
   res.status(404).json({
