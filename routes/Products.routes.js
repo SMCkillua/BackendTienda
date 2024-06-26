@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/",authenticateJWT,isAdmin, async (req, res) => {
   try {
     // Validar los datos del producto con Zod
     const productData = ProductSchema.parse(req.body);
@@ -67,9 +67,9 @@ router.get("/:product_id", async (req, res) => {
   });
 });
 
-router.put("/:product_id", async (req, res) => {
+router.put("/:product_id",authenticateJWT,isAdmin, async (req, res) => {
   try {
-    const { product_id } = req.params;
+    const product_id = req.params.product_id;
     if (!product_id) {
       return res.status(400).json({ message: "Product ID is required" });
     }
@@ -122,7 +122,7 @@ router.put("/:product_id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id",authenticateJWT,isAdmin, async (req, res) => {
   try {
     const productId = req.params.id;
 
