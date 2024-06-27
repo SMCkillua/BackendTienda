@@ -3,9 +3,11 @@ import dotenv from "dotenv";
 import Product from "../models/Product.js";
 import CartItem from "../models/CartItem.js";
 import Cart from "../models/Cart.js";
+
 dotenv.config();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 export const openStripePaymentLink = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -53,7 +55,7 @@ export const openStripePaymentLink = async (req, res) => {
             images: [result.product.image_url],
           },
           currency: "usd",
-          unit_amount: result.product.price * 100, // Asegúrate de que el precio esté en centavos
+          unit_amount: Math.round(result.product.price * 100), // Asegúrate de que el precio esté en centavos y redondeado
         },
         quantity: result.quantity,
       }));
@@ -76,7 +78,7 @@ export const openStripePaymentLink = async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${url}/api/payment/success/?totalPrice=${totalPrice / 100}&userID=${userId}`,
+      success_url: `${url}/api/payment/success/?totalPrice=${totalPrice / 100}&userID=${userId}`, // Dividir por 100 para convertir de centavos a dólares
       cancel_url: `${url}/api/payment/cancel`,
     });
 
@@ -86,4 +88,3 @@ export const openStripePaymentLink = async (req, res) => {
     return res.status(500).json({ error: "An error occurred while creating the payment session" });
   }
 };
-
