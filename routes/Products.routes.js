@@ -71,7 +71,7 @@ router.put("/:product_id",authenticateJWT,isAdmin, async (req, res) => {
   try {
     const product_id = req.params.product_id;
     if (!product_id) {
-      return res.status(400).json({ message: "Product ID is required" });
+      return res.status(405).json({ message: "Product ID is required" });
     }
 
     // Obtener los datos del cuerpo de la solicitud

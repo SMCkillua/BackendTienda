@@ -2,8 +2,6 @@ import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import AWS from 'aws-sdk';
-import User from '../models/User.js';
-
 const R2 = new AWS.S3({
   endpoint: 'https://0b3b6bb70e8692094f7de9177b93015f.r2.cloudflarestorage.com',
   accessKeyId: '079b03e9494db6fd285207e2f9d40723',
@@ -20,10 +18,6 @@ const upload = multer({ storage: storage });
 export const single = upload.single('image');
 
 export const uploadUserImage = async (req, res) => {
-  const userId = req.user.userId;
-  if(!userId){
-    return res.status(400).json({message: 'No se ha encontrado el usuario.'});
-  }
   if (!req.file) {
     return res.status(400).send({ error: 'No file uploaded' });
   }
