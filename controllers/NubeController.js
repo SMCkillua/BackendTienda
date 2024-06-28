@@ -20,8 +20,10 @@ const upload = multer({ storage: storage });
 export const single = upload.single('image');
 
 export const uploadUserImage = async (req, res) => {
-  const userId = req.params.id;
-
+  const userId = req.user.userId;
+  if(!userId){
+    return res.status(400).json({message: 'No se ha encontrado el usuario.'});
+  }
   if (!req.file) {
     return res.status(400).send({ error: 'No file uploaded' });
   }
@@ -29,18 +31,17 @@ export const uploadUserImage = async (req, res) => {
   const fileName = `${Date.now()}-${req.file.originalname}`;
 
   const params = {
-    Bucket: 'plexostore', // Nombre de tu bucket en Cloudflare R2
+    Bucket: 'plexostore', 
     Key: fileName,
     Body: req.file.buffer,
     ContentType: req.file.mimetype,
-    ACL: 'public-read', // Permite acceso público al archivo
+    ACL: 'public-read', 
   };
 
   try {
     const data = await R2.upload(params).promise();
     const imagePath = `https://pub-9cbda97d00e44e8397a173d2f883c50d.r2.dev/${fileName}`;
 
-    // Actualizar el campo de imagen del usuario en la base de datos
     await User.update({ image: imagePath }, { where: { user_id: userId } });
 
     res.json({ message: 'Image uploaded successfully', imagePath });
