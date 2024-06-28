@@ -4,18 +4,16 @@ import { fileURLToPath } from 'url';
 import AWS from 'aws-sdk';
 import User from '../models/User.js';
 
-
 const R2 = new AWS.S3({
   endpoint: 'https://0b3b6bb70e8692094f7de9177b93015f.r2.cloudflarestorage.com',
   accessKeyId: '079b03e9494db6fd285207e2f9d40723',
   secretAccessKey: '51157ec9bb58c3c93b6daa1521bf72036de38290f491c1ce95e4c3d18cd05570',
-  s3ForcePathStyle: true,
+  s3ForcePathStyle: true, // Necesario para Cloudflare R2
 });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configurar multer para recibir el archivo
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -31,17 +29,18 @@ export const uploadUserImage = async (req, res) => {
   const fileName = `${Date.now()}-${req.file.originalname}`;
 
   const params = {
-    Bucket: 'plexostore', 
+    Bucket: 'plexostore', // Nombre de tu bucket en Cloudflare R2
     Key: fileName,
     Body: req.file.buffer,
     ContentType: req.file.mimetype,
-    ACL: 'public-read', 
+    ACL: 'public-read', // Permite acceso público al archivo
   };
 
   try {
     const data = await R2.upload(params).promise();
-    const imagePath = data.Location;
+    const imagePath = `https://pub-9cbda97d00e44e8397a173d2f883c50d.r2.dev/${fileName}`;
 
+    // Actualizar el campo de imagen del usuario en la base de datos
     await User.update({ image: imagePath }, { where: { user_id: userId } });
 
     res.json({ message: 'Image uploaded successfully', imagePath });
