@@ -38,11 +38,6 @@ router.post("/",authenticateJWT,isAdmin, async (req, res) => {
       where: { name: productData.name },
     });
 
-    if (existingProduct) {
-      return res
-        .status(400)
-        .json({ message: "El producto con ese nombre ya existe." });
-    }
 
     const newProduct = await Product.create(productData);
 
