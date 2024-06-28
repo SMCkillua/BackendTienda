@@ -42,8 +42,6 @@ export const uploadUserImage = async (req, res) => {
     const data = await R2.upload(params).promise();
     const imagePath = `https://pub-9cbda97d00e44e8397a173d2f883c50d.r2.dev/${fileName}`;
 
-    await User.update({ image: imagePath }, { where: { user_id: userId } });
-
     res.json({ message: 'Image uploaded successfully', imagePath });
   } catch (err) {
     console.error('Error uploading image:', err);
