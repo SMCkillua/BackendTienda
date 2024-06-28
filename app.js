@@ -46,6 +46,8 @@ app.use("/api/users", authenticateJWT, usersRouter);
 app.use("/api/orders", authenticateJWT, OrdersRouter);
 app.use("/api/carts", authenticateJWT, CartsRoutes);
 app.use("/api/images", ImagesRoutes);
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/", (req,res) =>{
   res.json({Wellcome: "Wellcome to PlexoShop API"})
 } )
