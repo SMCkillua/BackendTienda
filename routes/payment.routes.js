@@ -144,7 +144,7 @@ router.get("/success", async (req, res) => {
     console.log(results);
 
     return res.redirect(
-      "https://plexoshop.vercel.app/success"
+      "https://plexoshop.vercel.app/payment-success"
     ); 
   } catch (error) {
     console.log(error);
@@ -154,7 +154,7 @@ router.get("/success", async (req, res) => {
 
 router.get("/cancel", (req, res) => {
   res.status(200).json({ message: "Payment cancelled" });
-  return res.redirect(`https://plexoshop.vercel.app/cancel`);
+  return res.redirect(`https://plexoshop.vercel.app/payment-failed`);
 });
 
 export default router;
